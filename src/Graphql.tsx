@@ -46,7 +46,10 @@ const App: React.FC = () => {
   }
 
   return (
-    <>{data?.locations?.map((location) => <LocationComponent key={location.id} {...location} />)}</>
+    <>
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      {data?.locations?.map((location) => <LocationComponent key={location.id} {...location} />)}
+    </>
   );
 };
 
