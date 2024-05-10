@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { Post } from "./interfaces"; // Assuming Post interface exists
+import { useQuery } from 'react-query';
+import { Post } from './interfaces'; // Assuming Post interface exists
 
 // Type for query results (array of Post)
 type PostsQueryResult = Post[];
@@ -8,7 +8,7 @@ type PostsQueryResult = Post[];
 type PostQueryResult = Post;
 
 const getPosts = async (): Promise<PostsQueryResult> => {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
   return res.json();
 };
 
@@ -17,10 +17,9 @@ const getPost = async (id: number): Promise<PostQueryResult> => {
   return res.json();
 };
 
-export const useGetPosts = () =>
-  useQuery<PostsQueryResult, Error>("posts", getPosts);
+export const useGetPosts = () => useQuery<PostsQueryResult, Error>('posts', getPosts);
 
 export const useGetPost = (postId: number) =>
-  useQuery<PostQueryResult, Error>(["post", postId], () => getPost(postId), {
+  useQuery<PostQueryResult, Error>(['post', postId], () => getPost(postId), {
     keepPreviousData: true,
   });

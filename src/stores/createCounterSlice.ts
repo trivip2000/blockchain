@@ -1,5 +1,5 @@
-import {  StoreApi } from "zustand";
-import { MyState } from "./useStore";
+import { StoreApi } from 'zustand';
+import { MyState } from './useStore';
 
 export interface CounterSlice {
   counter: number;
@@ -9,12 +9,10 @@ export interface CounterSlice {
 
 const counter = 0;
 
-const createCounterSlice = (
-  set:  StoreApi<MyState>['setState'],
-) => ({
+const createCounterSlice = (set: StoreApi<MyState>['setState']) => ({
   counter,
   incrementCounter: () => set((state) => ({ counter: state.counter + 1 })),
-  decrementCounter: () => set((state) => ({ counter: state.counter - 1 }))
+  decrementCounter: () => set((state) => ({ counter: state.counter - 1 })),
 });
 
-export default createCounterSlice
+export default createCounterSlice;
