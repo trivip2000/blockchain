@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import { gql } from 'graphql-tag';
-
+import Form from './Form';
 interface Location {
   id: string;
   name: string;
@@ -47,7 +47,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <Form />
       {data?.locations?.map((location) => <LocationComponent key={location.id} {...location} />)}
     </>
   );
