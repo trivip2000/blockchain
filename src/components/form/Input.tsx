@@ -8,7 +8,7 @@ interface InputProps {
   name?: string;
 }
 function Input(props: InputProps) {
-  //   console.log(props, '123213props');
+  console.log(props, '123213props');
   return (
     <>
       <label

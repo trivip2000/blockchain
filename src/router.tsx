@@ -1,16 +1,16 @@
 // import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Graphql from './Graphql.tsx';
-import App from './App.tsx';
+import Homepage from '@/pages/Homepage';
+import About from '@/pages/About';
 
 const routes = createBrowserRouter([
   {
     path: '/',
-    element: <Graphql />,
+    element: <Homepage />,
   },
   {
-    path: '/app',
-    element: <App />,
+    path: '/about',
+    element: <About />,
   },
 ]);
 

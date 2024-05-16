@@ -10,7 +10,8 @@ interface Location {
 }
 
 interface Data {
-  locations: Location[];
+  locations?: Location[];
+  stale?: boolean;
 }
 
 const AppQuery = gql`
@@ -36,7 +37,7 @@ const LocationComponent: React.FC<Location> = ({ id, name, description, photo })
 );
 
 const App: React.FC = () => {
-  const { loading, data, error } = useQuery<Data>(AppQuery);
+  const { loading, data, error, refetch } = useQuery<Data>(AppQuery);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -47,7 +48,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Form />
+      <Form refetch={refetch} />
       {data?.locations?.map((location) => <LocationComponent key={location.id} {...location} />)}
     </>
   );
