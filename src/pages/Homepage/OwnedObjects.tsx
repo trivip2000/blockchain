@@ -4,7 +4,7 @@ import { Flex, Heading, Text } from '@radix-ui/themes';
 export function OwnedObjects() {
   const account = useCurrentAccount();
   const { data, isPending, error } = useSuiClientQuery(
-    'getOwnedObjects',
+    'getAllBalances',
     {
       owner: account?.address as string,
     },
@@ -24,17 +24,17 @@ export function OwnedObjects() {
   if (isPending || !data) {
     return <Flex>Loading...</Flex>;
   }
-
+  console.log(data, 'data.data');
   return (
     <Flex direction="column" my="2">
-      {data.data.length === 0 ? (
+      {data.length === 0 ? (
         <Text>No objects owned by the connected wallet</Text>
       ) : (
         <Heading size="4">Objects owned by the connected wallet</Heading>
       )}
-      {data.data.map((object) => (
-        <Flex key={object.data?.objectId}>
-          <Text>Object ID: {object.data?.objectId}</Text>
+      {data.map((object) => (
+        <Flex key={object?.coinType}>
+          <Text>Total Balance: {object?.totalBalance}</Text>
         </Flex>
       ))}
     </Flex>
