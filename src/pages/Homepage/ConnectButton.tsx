@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   ConnectModal,
   useCurrentAccount,
+  useWallets,
   // useSignAndExecuteTransactionBlock,
 } from '@mysten/dapp-kit';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
@@ -13,6 +14,7 @@ export default function ConnectButton() {
   // const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
   // const [digest, setDigest] = useState('');
   const currentAccount = useCurrentAccount();
+  const wallets = useWallets();
   console.log(currentAccount, 'currentAccount');
   const [open, setOpen] = useState(false);
   const ButtonConnect = styled.button`
@@ -24,8 +26,8 @@ export default function ConnectButton() {
     text-overflow: ellipsis;
   `;
   const handleSigned = async () => {
-    const keypair = Ed25519Keypair.fromSecretKey(Buffer.from('Tr9127899', 'base64'));
-    console.log('23123123');
+    const keypair = new Ed25519Keypair();
+    console.log(wallets, '23123123');
     const client = new SuiClient({
       url: getFullnodeUrl('testnet'),
     });
