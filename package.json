@@ -10,8 +10,15 @@
     "preview": "vite preview",
     "test": "jest --changedSince=master --watch"
   },
+  "resolutions": {
+    "styled-components": "^5"
+  },
   "dependencies": {
     "@apollo/client": "^3.10.3",
+    "@mysten/dapp-kit": "^0.13.2",
+    "@mysten/sui.js": "^0.54.1",
+    "@radix-ui/themes": "^3.0.5",
+    "@tanstack/react-query": "^5.37.1",
     "@testing-library/react": "^15.0.7",
     "apollo-boost": "^0.4.9",
     "framer-motion": "^11.2.2",
@@ -24,6 +31,7 @@
     "react-hook-form": "^7.51.4",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.23.0",
+    "styled-components": "^6.1.11",
     "swr": "^2.2.5",
     "zustand": "^4.5.2"
   },

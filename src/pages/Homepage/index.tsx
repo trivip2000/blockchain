@@ -1,57 +1,34 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
-import { gql } from 'graphql-tag';
-import Form from './Form';
-interface Location {
-  id: string;
-  name: string;
-  description: string;
-  photo: string;
-}
+import ConnectButton from './ConnectButton';
+import { Box, Container, Flex, Heading } from '@radix-ui/themes';
+import { WalletStatus } from './WalletStatus';
 
-interface Data {
-  locations?: Location[];
-  stale?: boolean;
-}
-
-const AppQuery = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
-    }
-  }
-`;
-
-const LocationComponent: React.FC<Location> = ({ id, name, description, photo }) => (
-  <div key={id}>
-    <h3>{name}</h3>
-    <img width="400" height="250" alt="location-reference" src={`${photo}`} />
-    <br />
-    <b>About this location:</b>
-    <p>{description}</p>
-    <br />
-  </div>
-);
-
-const App: React.FC = () => {
-  const { loading, data, error, refetch } = useQuery<Data>(AppQuery);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
-
+function App() {
   return (
     <>
-      <Form refetch={refetch} />
-      {data?.locations?.map((location) => <LocationComponent key={location.id} {...location} />)}
+      <Flex
+        position="sticky"
+        px="4"
+        py="2"
+        justify="between"
+        style={{
+          borderBottom: '1px solid var(--gray-a2)',
+        }}
+      >
+        <Box>
+          <Heading>Sui dApp</Heading>
+        </Box>
+
+        <Box>
+          <ConnectButton />
+        </Box>
+      </Flex>
+      <Container>
+        <Container mt="5" pt="2" px="4" style={{ background: 'var(--gray-a2)', minHeight: 500 }}>
+          <WalletStatus />
+        </Container>
+      </Container>
     </>
   );
-};
+}
 
 export default App;

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 interface InputProps {
   label?: string;
   // add other properties as needed
@@ -17,7 +18,10 @@ function Input(props: InputProps) {
       >
         {props.label}
       </label>
-      <input
+      <motion.input
+        whileHover={{ scale: 1.1 }}
+        whileMouseLeave={{ scale: 1 }}
+        initial={{ scale: 1 }}
         // type="text"
         className="transition-all duration-500 ease-in-out bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         {...props}
