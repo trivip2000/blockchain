@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 import { Flex, Heading, Text } from '@radix-ui/themes';
 import ModalSendToken from './ModalSendToken';
+import createCoinStore from '@/stores/createCounterSlice';
 import { Button } from 'antd';
 export function OwnedObjects() {
   const account = useCurrentAccount();
+  // const coinSelected = createCoinStore((state) => state.coinSelected);
+  const setCoinSelected = createCoinStore((state) => state.setCoinSelected);
   const [open, setOpen] = useState(false);
-  const showModal = () => {
+  const showModal = (coinType: string) => {
     setOpen(true);
+    setCoinSelected(coinType);
   };
 
   const { data, isPending, error } = useSuiClientQuery(
@@ -38,7 +42,7 @@ export function OwnedObjects() {
         <Flex key={object?.coinType}>
           <Text>
             {object?.coinType} : {object?.totalBalance}{' '}
-            <Button type="primary" onClick={showModal}>
+            <Button type="primary" onClick={() => showModal(object?.coinType)}>
               Sends Coin
             </Button>
           </Text>

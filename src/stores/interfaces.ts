@@ -2,5 +2,5 @@ export interface CounterSlice {
   coinSelected: string;
   // incrementCounter: () => void;
   // decrementCounter: () => void;
-  setCoinSelected: () => void;
+  setCoinSelected: (coin: string) => void;
 }
