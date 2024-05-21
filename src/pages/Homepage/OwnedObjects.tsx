@@ -1,8 +1,15 @@
+import { useState } from 'react';
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 import { Flex, Heading, Text } from '@radix-ui/themes';
-
+import ModalSendToken from './ModalSendToken';
+import { Button } from 'antd';
 export function OwnedObjects() {
   const account = useCurrentAccount();
+  const [open, setOpen] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+
   const { data, isPending, error } = useSuiClientQuery(
     'getAllBalances',
     {
@@ -24,19 +31,20 @@ export function OwnedObjects() {
   if (isPending || !data) {
     return <Flex>Loading...</Flex>;
   }
-  console.log(data, 'data.data');
   return (
     <Flex direction="column" my="2">
-      {data.length === 0 ? (
-        <Text>No objects owned by the connected wallet</Text>
-      ) : (
-        <Heading size="4">Objects owned by the connected wallet</Heading>
-      )}
+      {data.length === 0 ? <Text>No tokens</Text> : <Heading size="4">List tokens</Heading>}
       {data.map((object) => (
         <Flex key={object?.coinType}>
-          <Text>Total Balance: {object?.totalBalance}</Text>
+          <Text>
+            {object?.coinType} : {object?.totalBalance}{' '}
+            <Button type="primary" onClick={showModal}>
+              Sends Coin
+            </Button>
+          </Text>
         </Flex>
       ))}
+      <ModalSendToken open={open} setOpen={setOpen} />
     </Flex>
   );
 }

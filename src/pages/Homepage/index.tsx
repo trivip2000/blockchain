@@ -1,7 +1,6 @@
 import ConnectButton from './ConnectButton';
 import { Box, Container, Flex, Heading } from '@radix-ui/themes';
 import { WalletStatus } from './WalletStatus';
-
 function App() {
   return (
     <>

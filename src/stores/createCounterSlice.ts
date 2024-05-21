@@ -1,18 +1,11 @@
 import { StoreApi } from 'zustand';
 import { MyState } from './useStore';
 
-export interface CounterSlice {
-  counter: number;
-  incrementCounter: () => void;
-  decrementCounter: () => void;
-}
+const coinSelected = '0x2::sui::SUI';
 
-const counter = 0;
-
-const createCounterSlice = (set: StoreApi<MyState>['setState']) => ({
-  counter,
-  incrementCounter: () => set((state) => ({ counter: state.counter + 1 })),
-  decrementCounter: () => set((state) => ({ counter: state.counter - 1 })),
+const createCoinStore = (set: StoreApi<MyState>['setState']) => ({
+  coinSelected,
+  setCoinSelected: (coin: string) => set((state) => ({ ...state, coinSelected: coin })),
 });
 
-export default createCounterSlice;
+export default createCoinStore;
