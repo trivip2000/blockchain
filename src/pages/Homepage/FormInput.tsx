@@ -1,25 +1,27 @@
 import React from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space } from 'antd';
+import { Button, Form, Input, Space, Select, InputNumber } from 'antd';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { useSignAndExecuteTransactionBlock, useCurrentAccount } from '@mysten/dapp-kit';
+import useStore from '@/stores/createCounterSlice';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
+import { mapCoinName, getSuiNumber } from '@/constants';
 type sendInfo = {
   address: string;
   amount: number;
+  coinType: string;
 };
 type Values = {
   sendlist: sendInfo[];
 };
 
-const App: React.FC = () => {
+const App: React.FC = ({ data }) => {
   const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
+  const coinSelected = useStore((state) => state.coinSelected);
+  const [form] = Form.useForm();
   const account = useCurrentAccount();
   const onFinish = async (values: Values) => {
-    // const result1 = Uint8Array.from(
-    //   Buffer.from('5162d5a4aadb9afedb6d611f5a1e5a5d88eae3aec5b460aa5bcb8e8b5ff27ba2', 'hex'),
-    // );
-    // const keypair = Ed25519Keypair.fromSecretKey(result1);
+    console.log(values, '12312values');
     const client = new SuiClient({
       url: getFullnodeUrl('devnet'),
     });
@@ -29,10 +31,11 @@ const App: React.FC = () => {
     const coinsRes = await client.getCoins({
       owner: account?.address || '',
     });
+    const coinType = values.sendlist?.map((item) => item.coinType);
     // const coins = coinsRes.data;
     txb.setGasPayment(
       coinsRes.data
-        .filter((item) => item.coinType === '0x2::sui::SUI')
+        .filter((item) => coinType.includes(item.coinType))
         .map((coin) => ({
           version: coin.version,
           digest: coin.digest,
@@ -53,9 +56,13 @@ const App: React.FC = () => {
     // console.log({ result });
     console.log({ result });
   };
+  // const onChangeCoin = (value: string) => {
+  //   form.setFieldsValue({ coinType: value });
+  // };
   return (
     <Form
       name="dynamic_form_nest_item"
+      form={form}
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
       autoComplete="off"
@@ -65,7 +72,19 @@ const App: React.FC = () => {
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} className="grid grid-cols-[1fr_1fr_20px]" align="baseline">
+              <Space key={key} className="grid grid-cols-[1fr_1fr_1fr_20px]" align="baseline">
+                <Form.Item {...restField} name={[name, 'coinType']}>
+                  <Select
+                    defaultValue={coinSelected}
+                    // style={{ width: 120 }}
+                    // onChange={onChangeCoin}
+                    options={data.map((item) => ({
+                      value: item.coinType,
+                      label:
+                        (mapCoinName[item.coinType] || '') + '-' + getSuiNumber(item.totalBalance),
+                    }))}
+                  />
+                </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'address']}
@@ -78,7 +97,7 @@ const App: React.FC = () => {
                   name={[name, 'amount']}
                   rules={[{ required: true, message: 'Missing amount' }]}
                 >
-                  <Input placeholder="Amount" />
+                  <InputNumber className="w-full" placeholder="Amount" />
                 </Form.Item>
                 <MinusCircleOutlined onClick={() => remove(name)} />
               </Space>

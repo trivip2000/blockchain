@@ -5,9 +5,9 @@ import { getFullnodeUrl } from '@mysten/sui.js/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import router from './router';
+import { ConfigProvider } from 'antd';
 import '@mysten/dapp-kit/dist/index.css';
 import '@radix-ui/themes/styles.css';
-import { Theme } from '@radix-ui/themes';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { RouterProvider } from 'react-router-dom';
 const { networkConfig } = createNetworkConfig({
@@ -24,7 +24,13 @@ const client = new ApolloClient({
 });
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Theme appearance="dark">
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: '"Lexend", sans-serif',
+        },
+      }}
+    >
       <QueryClientProvider client={queryClient}>
         <SuiClientProvider networks={networkConfig} defaultNetwork="devnet">
           <WalletProvider autoConnect>
@@ -34,6 +40,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           </WalletProvider>
         </SuiClientProvider>
       </QueryClientProvider>
-    </Theme>
+    </ConfigProvider>
   </React.StrictMode>,
 );
