@@ -14,7 +14,6 @@ export default defineConfig({
       },
     ],
   },
-  base: '/book-landing-page/',
   test: {
     // 👋 add the line below to add jsdom to vite
     environment: 'jsdom',
