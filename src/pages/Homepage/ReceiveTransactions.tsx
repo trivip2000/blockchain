@@ -76,14 +76,16 @@ function ReceiveTransactions() {
           })}
           {item.objectChanges?.map((object) => {
             return (
-              <Card key={object.version}>
+              <Card key={('objectId' in object && object.objectId) || ''}>
                 <p className="font-medium">Changes</p>
                 <p className="font-medium my-3 text-[#008C65]">
                   {object.type == 'mutated' ? 'Update' : 'Created'}
                 </p>
                 <div className="grid grid-cols-2 gap-1">
                   <span>Object</span>
-                  <span className="text-right">{getEclipseAddress(object.version)}</span>
+                  <span className="text-right">
+                    {getEclipseAddress(('objectId' in object && object.objectId) || '')}
+                  </span>
                   <span>Package</span>
                   <span className="text-right">0x2</span>
                   <span>Module</span>
@@ -91,6 +93,10 @@ function ReceiveTransactions() {
                   <span>Type</span>
                   <span className="text-right">Coin</span>
                   <span>Owner</span>
+                  <span className="text-right">
+                    {'owner' in object &&
+                      getEclipseAddress((object.owner as OwnerWithAddress)?.AddressOwner)}
+                  </span>
                 </div>
               </Card>
             );
