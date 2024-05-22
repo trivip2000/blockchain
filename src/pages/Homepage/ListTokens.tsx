@@ -3,6 +3,7 @@ import { mapCoinName, getSuiNumber } from '@/constants';
 import ModalSendToken from './ModalSendToken';
 import { useState } from 'react';
 import createCoinStore from '@/stores/createCounterSlice';
+import Logo from '@/assets/sui-logo.svg?react';
 function ListTokens() {
   const account = useCurrentAccount();
   const setCoinSelected = createCoinStore((state) => state.setCoinSelected);
@@ -43,7 +44,7 @@ function ListTokens() {
         >
           <div>
             <div className="flex gap-2 items-center">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <Logo width="20px" height="20px" />
               <div>{mapCoinName[object?.coinType] || ''}</div>
             </div>
           </div>

@@ -1,38 +1,58 @@
-import React from 'react';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space, Select, InputNumber } from 'antd';
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Button, Input, Space, InputNumber, Select } from 'antd';
 import { useSignAndExecuteTransactionBlock, useCurrentAccount } from '@mysten/dapp-kit';
 import useStore from '@/stores/createCounterSlice';
+import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { mapCoinName, getSuiNumber } from '@/constants';
-type sendInfo = {
-  address: string;
-  amount: number;
-  coinType: string;
+type FormValues = {
+  cart: {
+    address: string;
+    amount: number;
+    coinType?: string;
+  }[];
 };
-type Values = {
-  sendlist: sendInfo[];
+type DataType = {
+  coinObjectCount: number;
+  coinType: string;
+  totalBalance: string;
+  // add other properties as needed
 };
 
-const App: React.FC = ({ data }) => {
+interface FormInputProps {
+  handleCancel: () => void; // adjust this as necessary based on the actual function signature
+  // include other props here...
+  data: DataType[];
+}
+export default function FormInput({ handleCancel, data }: FormInputProps) {
   const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
   const coinSelected = useStore((state) => state.coinSelected);
-  const [form] = Form.useForm();
   const account = useCurrentAccount();
-  const onFinish = async (values: Values) => {
-    console.log(values, '12312values');
+  const { register, control, handleSubmit, getValues } = useForm<FormValues>({
+    defaultValues: {
+      cart: [{ address: '', amount: 0, coinType: coinSelected }],
+    },
+    mode: 'onBlur',
+  });
+  const { fields, append, remove, update } = useFieldArray({
+    name: 'cart',
+    control,
+  });
+  const onFinish = async (values: FormValues) => {
+    // Create a new SuiClient and TransactionBlock
     const client = new SuiClient({
-      url: getFullnodeUrl('devnet'),
+      url: getFullnodeUrl(import.meta.env.VITE_DEFAULT_NETWORK),
     });
-
     const txb = new TransactionBlock();
 
+    // Get the coins for the current account
     const coinsRes = await client.getCoins({
       owner: account?.address || '',
     });
-    const coinType = values.sendlist?.map((item) => item.coinType);
-    // const coins = coinsRes.data;
+    const coinType = values.cart?.map((item) => item.coinType);
+
+    // Set the gas payment for the transaction block
     txb.setGasPayment(
       coinsRes.data
         .filter((item) => coinType.includes(item.coinType))
@@ -42,81 +62,129 @@ const App: React.FC = ({ data }) => {
           objectId: coin.coinObjectId,
         })),
     );
-    const transfers = values.sendlist?.map((item) => ({ to: item.address, amount: item.amount }));
+
+    // Define the transfers and split the coins for the transaction
+    const transfers = values.cart?.map((item) => ({ to: item.address, amount: item.amount }));
     const coins = txb.splitCoins(
       txb.gas,
       transfers.map((transfer) => txb.pure(transfer.amount)),
     );
+
+    // Add the transfers to the transaction block
     transfers.forEach((transfer, index) => {
       txb.transferObjects([coins[index]], txb.pure(transfer.to));
     });
-    const result = await signAndExecuteTransactionBlock({
+
+    // Sign and execute the transaction block
+    await signAndExecuteTransactionBlock({
       transactionBlock: txb,
     });
-    // console.log({ result });
-    console.log({ result });
-  };
-  // const onChangeCoin = (value: string) => {
-  //   form.setFieldsValue({ coinType: value });
-  // };
-  return (
-    <Form
-      name="dynamic_form_nest_item"
-      form={form}
-      onFinish={onFinish}
-      style={{ maxWidth: 600 }}
-      autoComplete="off"
-      className="mt-4"
-    >
-      <Form.List name="sendlist">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} className="grid grid-cols-[1fr_1fr_1fr_20px]" align="baseline">
-                <Form.Item {...restField} name={[name, 'coinType']}>
-                  <Select
-                    defaultValue={coinSelected}
-                    // style={{ width: 120 }}
-                    // onChange={onChangeCoin}
-                    options={data.map((item) => ({
-                      value: item.coinType,
-                      label:
-                        (mapCoinName[item.coinType] || '') + '-' + getSuiNumber(item.totalBalance),
-                    }))}
-                  />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'address']}
-                  rules={[{ required: true, message: 'Missing address' }]}
-                >
-                  <Input placeholder="Address" />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'amount']}
-                  rules={[{ required: true, message: 'Missing amount' }]}
-                >
-                  <InputNumber className="w-full" placeholder="Amount" />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add New Send Coins
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-      <Form.Item className="flex justify-end">
-        <Button type="primary" htmlType="submit">
-          Send
-        </Button>
-      </Form.Item>
-    </Form>
-  );
-};
 
-export default App;
+    handleCancel();
+  };
+
+  // Define the function to set the maximum coin amount for a row
+  const setMaxCoin = (fieldKey: number) => {
+    const row = getValues(`cart.${fieldKey}`);
+    console.log(row, '21321355');
+    const coinType = row.coinType;
+    const coinBalance = data.find((item) => item.coinType == coinType);
+    let amount = 0;
+    if (coinBalance) {
+      amount = Number(coinBalance.totalBalance);
+    }
+    update(fieldKey, { ...row, amount: amount - 50000000 });
+  };
+  return (
+    <div>
+      <form onSubmit={handleSubmit(onFinish)}>
+        {fields.map((field, index) => {
+          return (
+            <div key={field.id}>
+              <section
+                className="grid grid-cols-[1fr_1fr_1fr_20px] section gap-2 mb-2"
+                key={field.id}
+              >
+                <Controller
+                  // name="address"
+                  {...register(`cart.${index}.coinType` as const, {
+                    required: true,
+                  })}
+                  // defaultValue=""
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      // style={{ width: 120 }}
+                      {...field}
+                      placeholder="Coin"
+                      // onChange={(value) => onChangeCoin(key, value)}
+                      options={data.map((item) => ({
+                        value: item.coinType,
+                        label:
+                          (mapCoinName[item.coinType] || '') +
+                          '-' +
+                          getSuiNumber(item.totalBalance),
+                      }))}
+                    />
+                  )}
+                />
+                <Controller
+                  // name="address"
+                  {...register(`cart.${index}.address` as const, {
+                    required: true,
+                  })}
+                  // defaultValue=""
+                  control={control}
+                  render={({ field }) => <Input placeholder="Address" {...field} />}
+                />
+                <Controller
+                  // name="address"
+                  {...register(`cart.${index}.amount` as const, {
+                    required: true,
+                  })}
+                  // defaultValue=""
+                  control={control}
+                  render={({ field }) => (
+                    <Space.Compact style={{ width: '100%' }}>
+                      <InputNumber
+                        className="w-full [&::-webkit-inner-spin-button]:appearance-none"
+                        placeholder="Amount"
+                        {...field}
+                      />
+                      <Button onClick={() => setMaxCoin(index)} className="p-1">
+                        Max
+                      </Button>
+                    </Space.Compact>
+                  )}
+                />
+
+                <MinusCircleOutlined onClick={() => remove(index)} />
+              </section>
+            </div>
+          );
+        })}
+        <Button
+          type="dashed"
+          className=" mt-4"
+          onClick={() =>
+            append({
+              address: '',
+              amount: 0,
+              coinType: coinSelected,
+            })
+          }
+          block
+          icon={<PlusOutlined />}
+        >
+          Add New Send Coin
+        </Button>
+
+        <div className="flex justify-end mt-4">
+          <Button type="primary" htmlType="submit">
+            Send
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}

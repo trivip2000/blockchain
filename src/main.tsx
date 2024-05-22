@@ -10,13 +10,13 @@ import '@mysten/dapp-kit/dist/index.css';
 import '@radix-ui/themes/styles.css';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { RouterProvider } from 'react-router-dom';
+
 const { networkConfig } = createNetworkConfig({
   localnet: { url: getFullnodeUrl('localnet') },
   devnet: { url: getFullnodeUrl('devnet') },
   testnet: { url: getFullnodeUrl('testnet') },
   mainnet: { url: getFullnodeUrl('mainnet') },
 });
-
 const queryClient = new QueryClient();
 const client = new ApolloClient({
   uri: 'https://flyby-router-demo.herokuapp.com/',
@@ -32,7 +32,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <SuiClientProvider networks={networkConfig} defaultNetwork="devnet">
+        <SuiClientProvider
+          networks={networkConfig}
+          defaultNetwork={import.meta.env.VITE_DEFAULT_NETWORK}
+        >
           <WalletProvider autoConnect>
             <ApolloProvider client={client}>
               <RouterProvider router={router} />

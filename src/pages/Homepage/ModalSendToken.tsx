@@ -5,7 +5,7 @@ import FormInput from './FormInput';
 type DataType = {
   coinObjectCount: number;
   coinType: string;
-  totalBalance: number;
+  totalBalance: string;
   // add other properties as needed
 };
 
@@ -23,7 +23,7 @@ const ModalSendToken: React.FC<ModalSendTokenProps> = ({ open, setOpen, data }) 
   return (
     <>
       <Modal title={`Send Coin`} open={open} onCancel={handleCancel} footer={null}>
-        <FormInput data={data} />
+        <FormInput data={data} handleCancel={handleCancel} />
       </Modal>
     </>
   );

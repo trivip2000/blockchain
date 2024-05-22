@@ -6,7 +6,7 @@ import ListTokens from './ListTokens';
 export default function ConnectButton() {
   const currentAccount = useCurrentAccount();
   const { mutate: disconnect } = useDisconnectWallet();
-  console.log(currentAccount, 'currentAccount');
+
   const address = `${currentAccount?.address.slice(0, 5)}...${currentAccount?.address.slice(-5)}`;
   const content = (
     <div className="p-2 flex flex-col min-w-[300px]">
@@ -95,12 +95,6 @@ export default function ConnectButton() {
           open={open}
           onOpenChange={(isOpen) => setOpen(isOpen)}
         />
-      )}
-      {currentAccount && (
-        <>
-          <div></div>
-          {/* <div>Digest: {digest}</div> */}
-        </>
       )}
     </>
   );

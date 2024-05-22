@@ -1,24 +1,35 @@
 import ConnectButton from './ConnectButton';
-// import { Box, Container } from '@radix-ui/themes';
-import { WalletStatus } from './WalletStatus';
+import Transaction from './Transaction';
 import { Card } from 'antd';
-function App() {
+import { useCurrentAccount } from '@mysten/dapp-kit';
+
+function Homepage() {
+  // Use the useCurrentAccount hook to get information about the current account
+  const account = useCurrentAccount();
+
   return (
     <>
       <div className="flex p-4 justify-between">
-        <h2>Sui dApp</h2>
+        <p className="text-3xl font-bold flex gap-4 items-center">Sui dApp</p>
 
         <div>
           <ConnectButton />
         </div>
       </div>
-      <Card title="Card title" bordered={false} style={{ width: 300 }}>
-        <p>Card content</p>
-        <p>Card content</p>
-        <p>Card content</p>
-      </Card>
+      <div className="flex justify-center">
+        {account ? (
+          <div className="flex justify-center">
+            <Transaction />
+          </div>
+        ) : (
+          <Card className="w-[300px] font-bold flex justify-center">
+            Wallet not connected. <br />
+            Please connect wallet.
+          </Card>
+        )}
+      </div>
     </>
   );
 }
 
-export default App;
+export default Homepage;

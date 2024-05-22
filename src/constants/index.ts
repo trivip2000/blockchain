@@ -6,3 +6,6 @@ export const mapCoinName: CoinMap = {
 export const getSuiNumber = (value: string) => {
   return Math.ceil(Number(value) / 1000000000);
 };
+export const getEclipseAddress = (address: string) => {
+  return `${address.slice(0, 5)}...${address.slice(-5)}`;
+};
