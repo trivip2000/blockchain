@@ -50,7 +50,7 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     const coinsRes = await client.getCoins({
       owner: account?.address || '',
     });
-    const coinType = values.cart?.map((item) => item.coinType);
+    const coinType: string[] = values.cart?.map((item) => item.coinType as string);
 
     // Set the gas payment for the transaction block
     txb.setGasPayment(
@@ -117,7 +117,6 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
                       // style={{ width: 120 }}
                       {...field}
                       placeholder="Coin"
-                      // onChange={(value) => onChangeCoin(key, value)}
                       options={data.map((item) => ({
                         value: item.coinType,
                         label:
@@ -129,20 +128,16 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
                   )}
                 />
                 <Controller
-                  // name="address"
                   {...register(`cart.${index}.address` as const, {
                     required: true,
                   })}
-                  // defaultValue=""
                   control={control}
                   render={({ field }) => <Input placeholder="Address" {...field} />}
                 />
                 <Controller
-                  // name="address"
                   {...register(`cart.${index}.amount` as const, {
                     required: true,
                   })}
-                  // defaultValue=""
                   control={control}
                   render={({ field }) => (
                     <Space.Compact style={{ width: '100%' }}>

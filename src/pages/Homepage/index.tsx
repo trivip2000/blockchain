@@ -1,9 +1,10 @@
+import React from 'react';
 import ConnectButton from './ConnectButton';
 import Transaction from './Transaction';
 import { Card } from 'antd';
 import { useCurrentAccount } from '@mysten/dapp-kit';
 
-function Homepage() {
+const Homepage: React.FC = () => {
   // Use the useCurrentAccount hook to get information about the current account
   const account = useCurrentAccount();
 
@@ -30,6 +31,6 @@ function Homepage() {
       </div>
     </>
   );
-}
+};
 
 export default Homepage;
