@@ -13,3 +13,6 @@ export const getEclipseAddress = (address: string) => {
 export const getBlance = (balance: string | number) => {
   return Number.parseInt(balance.toString()) / Number(MIST_PER_SUI);
 };
+export const convertNumberToSui = (amount: string) => {
+  return Number.parseInt(amount) * Number(MIST_PER_SUI);
+};

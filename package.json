@@ -7,9 +7,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "jest --watch",
+    "test": "jest --watch --onlyFailures",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
@@ -64,6 +64,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "gh-pages": "^6.1.1",
     "jest-environment-jsdom": "^29.7.0",
+    "jest-svg-transformer": "^1.0.0",
     "jsdom": "^24.0.0",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",

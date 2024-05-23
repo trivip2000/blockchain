@@ -5,7 +5,7 @@ import { useSignAndExecuteTransactionBlock, useCurrentAccount } from '@mysten/da
 import useStore from '@/stores/createCounterSlice';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { mapCoinName, getSuiNumber, getBlance } from '@/constants';
+import { mapCoinName, getSuiNumber, getBlance, convertNumberToSui } from '@/constants';
 type FormValues = {
   cart: {
     address: string;
@@ -71,7 +71,10 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     );
 
     // Define the transfers and split the coins for the transaction
-    const transfers = values.cart?.map((item) => ({ to: item.address, amount: item.amount }));
+    const transfers = values.cart?.map((item) => ({
+      to: item.address,
+      amount: convertNumberToSui(item.amount?.toString() || ''),
+    }));
     const coins = txb.splitCoins(
       txb.gas,
       transfers.map((transfer) => txb.pure(transfer.amount)),

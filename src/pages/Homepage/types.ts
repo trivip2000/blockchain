@@ -12,7 +12,7 @@ export type BalanceChangesProps = {
   object?: objectChangesProps; // Add this line
   // include other props as needed
 };
-type DataType = {
+export type DataType = {
   coinObjectCount: number;
   coinType: string;
   totalBalance: string;

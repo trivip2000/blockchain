@@ -36,7 +36,7 @@ function ReceiveTransactions() {
   }
 
   if (isPending || !data) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
   const items = data.data.map((item) => {
     return {

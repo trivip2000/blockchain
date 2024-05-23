@@ -24,6 +24,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
+  "setupFilesAfterEnv": ["./jest.setup.js"],
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
