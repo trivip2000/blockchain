@@ -35,8 +35,8 @@ describe('getBlance', () => {
 
 describe('convertNumberToSui', () => {
   it('should return the correct SUI amount', () => {
-    const amount = '2';
-    const expectedAmount = Number.parseInt(amount) * Number(MIST_PER_SUI);
+    const amount = 2;
+    const expectedAmount = amount * Number(MIST_PER_SUI);
     expect(convertNumberToSui(amount)).toBe(expectedAmount);
   });
 });

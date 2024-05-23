@@ -45,14 +45,14 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     name: 'cart',
     control,
   });
-  console.log(errors, 'errors');
+  // console.log(errors, 'errors');
   const onFinish = async (values: FormValues) => {
     // Create a new SuiClient and TransactionBlock
     const client = new SuiClient({
       url: getFullnodeUrl(import.meta.env.VITE_DEFAULT_NETWORK),
     });
     const txb = new TransactionBlock();
-
+    console.log(values, '213FormValues');
     // Get the coins for the current account
     const coinsRes = await client.getCoins({
       owner: account?.address || '',
@@ -73,8 +73,9 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     // Define the transfers and split the coins for the transaction
     const transfers = values.cart?.map((item) => ({
       to: item.address,
-      amount: convertNumberToSui(item.amount?.toString() || ''),
+      amount: convertNumberToSui(item.amount || 0),
     }));
+    console.log(transfers, '123transfers');
     const coins = txb.splitCoins(
       txb.gas,
       transfers.map((transfer) => txb.pure(transfer.amount)),
