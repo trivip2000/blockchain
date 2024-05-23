@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 // File: ConnectButton.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
-import ConnectButton from './../ConnectButton';
+import ConnectButton from '../components/ConnectButton';
 import { useCurrentAccount, useDisconnectWallet } from '@mysten/dapp-kit';
 // import { mocked } from 'ts-jest/utils';
 jest.mock('./../ListTokens', () => () => {

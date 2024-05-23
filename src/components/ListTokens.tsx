@@ -1,6 +1,6 @@
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 import { mapCoinName, getBlance } from '@/constants';
-import ModalSendToken from './ModalSendToken';
+import ModalSendToken from '../pages/Homepage/components/ModalSendToken';
 import { useState } from 'react';
 import createCoinStore from '@/stores/createCounterSlice';
 import Logo from '@/assets/sui-logo.svg?react';

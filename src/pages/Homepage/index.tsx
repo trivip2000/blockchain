@@ -1,6 +1,6 @@
 import React from 'react';
-import ConnectButton from './ConnectButton';
-import Transaction from './Transaction';
+import ConnectButton from './components/ConnectButton';
+import Transaction from './components/Transaction';
 import { Card } from 'antd';
 import { useCurrentAccount } from '@mysten/dapp-kit';
 

@@ -1,9 +1,10 @@
+import React from 'react';
 import { Card } from 'antd';
-// import { getEclipseAddress } from '@/constants';
-import { TransactionStyled } from './styled';
+import { TransactionStyled } from '../styled';
 import ReceiveTransactions from './ReceiveTransactions';
 import SendTransactions from './SendTransactions';
-export default function OwnedObjects() {
+
+const Transaction: React.FC = () => {
   return (
     <TransactionStyled>
       <Card title="Your Activity" bordered={false} style={{ width: 400 }}>
@@ -12,4 +13,6 @@ export default function OwnedObjects() {
       </Card>
     </TransactionStyled>
   );
-}
+};
+
+export default Transaction;

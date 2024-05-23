@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ConnectModal, useCurrentAccount, useDisconnectWallet } from '@mysten/dapp-kit';
 import { Popover, Tooltip } from 'antd';
-import ListTokens from './ListTokens';
-import { ButtonConnect } from './styled';
+import ListTokens from '@/components/ListTokens';
+import { ButtonConnect } from '../styled';
 import Copy from '@/assets/copy.svg?react';
 
 export default function ConnectButton() {

@@ -4,7 +4,7 @@ import { Collapse, Card } from 'antd';
 // import Receive from '@/assets/receive.svg?react';
 import Logo from '@/assets/sui-logo.svg?react';
 import { getEclipseAddress, getBlance } from '@/constants';
-import { TransactionBlock } from './styled';
+import { TransactionBlock } from '../styled';
 
 interface OwnerWithAddress {
   AddressOwner: string;
