@@ -6,6 +6,9 @@ This dapp is built using Vite, Typescript, React.
 
 https://master--sui-dapp.netlify.app/
 
+## App Testing Flow
+
+First, switch SUI wallet to devnet and request SUI tokens through the SUI wallet. Connect the wallet with the app and start trying to transfer SUI coins.
 
 ## App Features
 
