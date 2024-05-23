@@ -10,6 +10,6 @@ export const getSuiNumber = (value: string) => {
 export const getEclipseAddress = (address: string) => {
   return `${address.slice(0, 5)}...${address.slice(-5)}`;
 };
-export const getBlance = (balance: string) => {
-  return Number.parseInt(balance) / Number(MIST_PER_SUI);
+export const getBlance = (balance: string | number) => {
+  return Number.parseInt(balance.toString()) / Number(MIST_PER_SUI);
 };

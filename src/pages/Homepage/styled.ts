@@ -1,12 +1,20 @@
 import styled from 'styled-components';
 
 export const TransactionStyled = styled.div`
+  max-height: calc(100vh - 100px);
+  overflow: auto;
+  .ant-card-head {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+  }
   .ant-collapse {
     border: none;
     .ant-collapse-item {
       border: none;
       background: white;
-      border-top: 1px solid #ececec;
+      /* border-top: 1px solid #ececec; */
     }
   }
 `;

@@ -5,11 +5,11 @@ import { useSignAndExecuteTransactionBlock, useCurrentAccount } from '@mysten/da
 import useStore from '@/stores/createCounterSlice';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { mapCoinName, getSuiNumber } from '@/constants';
+import { mapCoinName, getSuiNumber, getBlance } from '@/constants';
 type FormValues = {
   cart: {
     address: string;
-    amount: number;
+    amount?: number;
     coinType?: string;
   }[];
 };
@@ -29,9 +29,15 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
   const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
   const coinSelected = useStore((state) => state.coinSelected);
   const account = useCurrentAccount();
-  const { register, control, handleSubmit, getValues } = useForm<FormValues>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: {
-      cart: [{ address: '', amount: 0, coinType: coinSelected }],
+      cart: [{ address: '', coinType: coinSelected }],
     },
     mode: 'onBlur',
   });
@@ -39,6 +45,7 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     name: 'cart',
     control,
   });
+  console.log(errors, 'errors');
   const onFinish = async (values: FormValues) => {
     // Create a new SuiClient and TransactionBlock
     const client = new SuiClient({
@@ -86,14 +93,13 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
   // Define the function to set the maximum coin amount for a row
   const setMaxCoin = (fieldKey: number) => {
     const row = getValues(`cart.${fieldKey}`);
-    console.log(row, '21321355');
     const coinType = row.coinType;
     const coinBalance = data.find((item) => item.coinType == coinType);
     let amount = 0;
     if (coinBalance) {
-      amount = Number(coinBalance.totalBalance);
+      amount = getBlance(Number(coinBalance.totalBalance) - 50000000);
     }
-    update(fieldKey, { ...row, amount: amount - 50000000 });
+    update(fieldKey, { ...row, amount: amount });
   };
   return (
     <div>
@@ -105,54 +111,68 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
                 className="grid grid-cols-[1fr_1fr_1fr_20px] section gap-2 mb-2"
                 key={field.id}
               >
-                <Controller
-                  // name="address"
-                  {...register(`cart.${index}.coinType` as const, {
-                    required: true,
-                  })}
-                  // defaultValue=""
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      // style={{ width: 120 }}
-                      {...field}
-                      placeholder="Coin"
-                      options={data.map((item) => ({
-                        value: item.coinType,
-                        label:
-                          (mapCoinName[item.coinType] || '') +
-                          '-' +
-                          getSuiNumber(item.totalBalance),
-                      }))}
-                    />
-                  )}
-                />
-                <Controller
-                  {...register(`cart.${index}.address` as const, {
-                    required: true,
-                  })}
-                  control={control}
-                  render={({ field }) => <Input placeholder="Address" {...field} />}
-                />
-                <Controller
-                  {...register(`cart.${index}.amount` as const, {
-                    required: true,
-                  })}
-                  control={control}
-                  render={({ field }) => (
-                    <Space.Compact style={{ width: '100%' }}>
-                      <InputNumber
-                        className="w-full [&::-webkit-inner-spin-button]:appearance-none"
-                        placeholder="Amount"
+                <div className="flex flex-col">
+                  <Controller
+                    // name="address"
+                    {...register(`cart.${index}.coinType` as const, {
+                      required: true,
+                    })}
+                    // defaultValue=""
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        // style={{ width: 120 }}
                         {...field}
+                        placeholder="Coin"
+                        options={data.map((item) => ({
+                          value: item.coinType,
+                          label:
+                            (mapCoinName[item.coinType] || '') +
+                            '-' +
+                            getSuiNumber(item.totalBalance),
+                        }))}
                       />
-                      <Button onClick={() => setMaxCoin(index)} className="p-1">
-                        Max
-                      </Button>
-                    </Space.Compact>
+                    )}
+                  />
+                  {errors.cart && errors.cart[index]?.coinType && (
+                    <span className="text-xs italic text-[#FF0000]">Please choose coin</span>
                   )}
-                />
-
+                </div>
+                <div className="flex flex-col">
+                  <Controller
+                    {...register(`cart.${index}.address` as const, {
+                      required: true,
+                    })}
+                    control={control}
+                    render={({ field }) => <Input placeholder="Address" {...field} />}
+                  />
+                  {errors.cart && errors.cart[index]?.address && (
+                    <span className="text-xs italic text-[#FF0000]">Please input address</span>
+                  )}
+                </div>
+                <div className="flex flex-col">
+                  <Controller
+                    {...register(`cart.${index}.amount` as const, {
+                      required: true,
+                    })}
+                    control={control}
+                    render={({ field }) => (
+                      <Space.Compact style={{ width: '100%' }}>
+                        <InputNumber
+                          className="w-full [&::-webkit-inner-spin-button]:appearance-none"
+                          placeholder="Amount"
+                          {...field}
+                        />
+                        <Button onClick={() => setMaxCoin(index)} className="p-1">
+                          Max
+                        </Button>
+                      </Space.Compact>
+                    )}
+                  />
+                  {errors.cart && errors.cart[index]?.amount && (
+                    <span className="text-xs italic text-[#FF0000]">Please input amount</span>
+                  )}
+                </div>
                 <MinusCircleOutlined onClick={() => remove(index)} />
               </section>
             </div>
@@ -164,7 +184,6 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
           onClick={() =>
             append({
               address: '',
-              amount: 0,
               coinType: coinSelected,
             })
           }

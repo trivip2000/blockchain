@@ -1,14 +1,11 @@
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 import moment from 'moment';
 import { Collapse, Card } from 'antd';
-// import Receive from '@/assets/receive.svg?react';
-import Logo from '@/assets/sui-logo.svg?react';
-import { getEclipseAddress, getBlance } from '@/constants';
+import { BalanceChangesProps, ObjectCardProps } from './../types';
+import ObjectCard from '@/components/ObjectCard';
+import BalanceCard from '@/components/BalanceCard';
+import { getBlance } from '@/constants';
 import { TransactionBlock } from '../styled';
-
-interface OwnerWithAddress {
-  AddressOwner: string;
-}
 
 function ReceiveTransactions() {
   const account = useCurrentAccount();
@@ -16,7 +13,7 @@ function ReceiveTransactions() {
     'queryTransactionBlocks',
     {
       filter: {
-        ToAddress: account?.address as string,
+        FromAddress: account?.address as string,
       },
       options: {
         showInput: true,
@@ -53,54 +50,13 @@ function ReceiveTransactions() {
         </div>
       ),
       children: (
-        <div className="flex flex-col gap-3">
-          {item.balanceChanges?.map((balance) => {
-            return (
-              <Card key={balance.amount}>
-                <p className="font-medium">Balance Changes</p>
-                <div className="flex justify-between mt-6">
-                  <span className="flex gap-2">
-                    <Logo width="20px" height="20px" />
-                    Sui
-                  </span>{' '}
-                  <span>{getBlance(balance.amount)}</span>
-                </div>
-                <div className="flex justify-between mt-6">
-                  <span className="font-medium">Owner</span>
-                  <span>
-                    {getEclipseAddress((balance.owner as OwnerWithAddress)?.AddressOwner)}
-                  </span>
-                </div>
-              </Card>
-            );
-          })}
-          {item.objectChanges?.map((object) => {
-            return (
-              <Card key={('objectId' in object && object.objectId) || ''}>
-                <p className="font-medium">Changes</p>
-                <p className="font-medium my-3 text-[#008C65]">
-                  {object.type == 'mutated' ? 'Update' : 'Created'}
-                </p>
-                <div className="grid grid-cols-2 gap-1">
-                  <span>Object</span>
-                  <span className="text-right">
-                    {getEclipseAddress(('objectId' in object && object.objectId) || '')}
-                  </span>
-                  <span>Package</span>
-                  <span className="text-right">0x2</span>
-                  <span>Module</span>
-                  <span className="text-right">coin</span>
-                  <span>Type</span>
-                  <span className="text-right">Coin</span>
-                  <span>Owner</span>
-                  <span className="text-right">
-                    {'owner' in object &&
-                      getEclipseAddress((object.owner as OwnerWithAddress)?.AddressOwner)}
-                  </span>
-                </div>
-              </Card>
-            );
-          })}
+        <div className="grid grid-cols-2 gap-3">
+          {(item.balanceChanges as BalanceChangesProps[])?.map((balance) => (
+            <BalanceCard key={balance.amount || ''} balance={balance} />
+          ))}
+          {(item.objectChanges as ObjectCardProps[])?.map((object) => (
+            <ObjectCard key={object.objectId || ''} object={object} />
+          ))}
           <Card>
             <div className="flex justify-between">
               <p className="font-medium">GAS FEES</p>

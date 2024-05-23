@@ -7,7 +7,7 @@ import SendTransactions from './SendTransactions';
 const Transaction: React.FC = () => {
   return (
     <TransactionStyled>
-      <Card title="Your Activity" bordered={false} style={{ width: 400 }}>
+      <Card title="Your Activity" bordered={false} className="w-[300px] sm:w-[520px]">
         <SendTransactions />
         <ReceiveTransactions />
       </Card>
