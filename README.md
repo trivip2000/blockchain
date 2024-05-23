@@ -7,6 +7,16 @@ This dapp is built using Vite,Typescript,React.
 https://master--sui-dapp.netlify.app/
 
 
+## App Features
+
+Our application provides the following features:
+
+1. **Connect Sui Wallet**: Users can connect their Sui Wallet to the application to manage their transactions.
+
+2. **Coin Transactions**: Users can transfer coins to other users. The application supports transferring multiple coins in a single transaction.
+
+3. **Transaction History**: Users can view their transaction history, which includes all the transactions they have made in the past.
+
 ## Technologies Used
 
 This project uses the following technologies:
