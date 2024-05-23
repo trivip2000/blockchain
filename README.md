@@ -1,6 +1,6 @@
 # Sui dApp
 
-This dapp is built using Vite,Typescript,React.
+This dapp is built using Vite, Typescript, React.
 
 ## Demo web
 
