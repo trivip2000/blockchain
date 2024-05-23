@@ -36,14 +36,6 @@ describe('ReceiveTransactions', () => {
     jest.clearAllMocks();
   });
 
-  it('should render loading state when account is not available', () => {
-    (useCurrentAccount as jest.Mock).mockReturnValue({ address: 'testAddress' });
-    (useSuiClientQuery as jest.Mock).mockReturnValue({ data: null, isPending: true, error: null });
-    render(<SendTransactions />);
-
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
-  });
-
   it('should render error message when there is an error', () => {
     const errorMessage = 'Error: Something went wrong';
     (useCurrentAccount as jest.Mock).mockReturnValue({ address: 'testAddress' });

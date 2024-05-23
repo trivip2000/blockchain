@@ -6,6 +6,9 @@ jest.mock('@/constants', () => ({
   getEclipseAddress: jest.fn((address) => address),
   getBlance: jest.fn((amount) => amount),
 }));
+jest.mock('./../SuiIcon', () => {
+  return jest.fn(() => <div>SuiIcon</div>);
+});
 
 describe('BalanceCard', () => {
   const balance = {

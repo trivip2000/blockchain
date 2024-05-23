@@ -11,6 +11,9 @@ jest.mock('@mysten/dapp-kit', () => ({
 jest.mock('../../pages/Homepage/components/ModalSendToken', () => {
   return jest.fn(() => <div>ModalSendToken</div>);
 });
+jest.mock('./../SuiIcon', () => {
+  return jest.fn(() => <div>SuiIcon</div>);
+});
 
 describe('ListTokens', () => {
   beforeEach(() => {

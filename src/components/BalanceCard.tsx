@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from 'antd';
-// import Logo from '@/assets/sui-logo.svg?react';
+import SuiIcon from './SuiIcon';
 import { getEclipseAddress, getBlance } from '@/constants';
 interface OwnerWithAddress {
   AddressOwner?: string;
@@ -17,7 +17,7 @@ const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => (
     <p className="font-medium">Balance Changes</p>
     <div className="flex justify-between mt-6">
       <span className="flex gap-2">
-        {/* <Logo width="20px" height="20px" /> */}
+        <SuiIcon />
         Sui
       </span>{' '}
       <span>{getBlance(balance.amount || '')}</span>
