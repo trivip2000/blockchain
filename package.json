@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --fix --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "jest --watch --onlyFailures",
+    "test": "jest --watch",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

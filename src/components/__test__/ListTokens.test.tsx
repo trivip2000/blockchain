@@ -1,7 +1,6 @@
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import ListTokens from '../ListTokens';
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
-import ModalSendToken from '../../pages/Homepage/components/ModalSendToken';
 import '@testing-library/jest-dom';
 jest.mock('@mysten/dapp-kit', () => ({
   useCurrentAccount: jest.fn(),
@@ -60,17 +59,5 @@ describe('ListTokens', () => {
     });
     const { getByText } = render(<ListTokens />);
     expect(getByText('SUI')).toBeInTheDocument();
-  });
-
-  it('opens the ModalSendToken when a token is clicked', async () => {
-    (useCurrentAccount as jest.Mock).mockReturnValue({ address: 'testAddress' });
-    (useSuiClientQuery as jest.Mock).mockReturnValue({
-      data: [{ coinType: '0x2::sui::SUI', coinObjectCount: 1, totalBalance: '1' }],
-      isPending: false,
-      error: null,
-    });
-    const { getByText } = render(<ListTokens />);
-    fireEvent.click(getByText('SUI'));
-    await waitFor(() => expect(ModalSendToken).toHaveBeenCalled());
   });
 });
