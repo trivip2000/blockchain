@@ -18,7 +18,7 @@ interface TransactionData {
   };
 }
 
-interface ReceiveTransactionsProps {
+export interface ReceiveTransactionsProps {
   data: TransactionData[];
 }
 function ReceiveTransactions({ data }: ReceiveTransactionsProps) {

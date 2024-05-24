@@ -22,5 +22,5 @@ export type DataType = {
 export type ModalSendTokenProps = {
   setOpen: (open: boolean) => void;
   open: boolean;
-  refetch: () => void;
+  refetch?: () => void;
 };

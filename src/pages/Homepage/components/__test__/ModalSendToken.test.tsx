@@ -29,16 +29,16 @@ describe('ModalSendToken', () => {
   });
 
   it('should render without crashing', () => {
-    render(<ModalSendToken open={open} setOpen={setOpen} data={data} />);
+    render(<ModalSendToken open={open} setOpen={setOpen} />);
   });
 
   it('should open the modal when open prop is true', () => {
-    render(<ModalSendToken open={open} setOpen={setOpen} data={data} />);
+    render(<ModalSendToken open={open} setOpen={setOpen} />);
     expect(Modal).toHaveBeenCalledWith(expect.objectContaining({ open: true }), expect.anything());
   });
 
   it('should render FormInput with correct props', () => {
-    render(<ModalSendToken open={open} setOpen={setOpen} data={data} />);
+    render(<ModalSendToken open={open} setOpen={setOpen} />);
     expect(FormInput).toHaveBeenCalledWith(
       { data, handleCancel: expect.any(Function) },
       expect.anything(),

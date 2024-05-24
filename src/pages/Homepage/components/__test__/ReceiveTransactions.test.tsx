@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { render, screen } from '@testing-library/react';
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 // import moment from 'moment';

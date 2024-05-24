@@ -25,7 +25,7 @@ interface FormInputProps {
   handleCancel: () => void; // adjust this as necessary based on the actual function signature
   // include other props here...
   data: DataType[];
-  refetch: () => void;
+  refetch?: () => void;
 }
 export default function FormInput({ handleCancel, data, refetch }: FormInputProps) {
   const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
@@ -103,7 +103,7 @@ export default function FormInput({ handleCancel, data, refetch }: FormInputProp
           // console.log('executed transaction block', result);
           if (result.digest) {
             openNotificationWithIcon('success');
-            refetch();
+            refetch && refetch();
             reset();
           }
           // setDigest(result.digest);
