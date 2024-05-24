@@ -1,11 +1,12 @@
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { Button, Input, Space, InputNumber, Select } from 'antd';
+import { Button, Input, Space, InputNumber, Select, notification } from 'antd';
 import { useSignAndExecuteTransactionBlock, useCurrentAccount } from '@mysten/dapp-kit';
 import useStore from '@/stores/createCounterSlice';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { mapCoinName, getSuiNumber, getBlance, convertNumberToSui } from '@/constants';
+
 type FormValues = {
   cart: {
     address: string;
@@ -19,21 +20,24 @@ type DataType = {
   totalBalance: string;
   // add other properties as needed
 };
-
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
 interface FormInputProps {
   handleCancel: () => void; // adjust this as necessary based on the actual function signature
   // include other props here...
   data: DataType[];
+  refetch: () => void;
 }
-export default function FormInput({ handleCancel, data }: FormInputProps) {
+export default function FormInput({ handleCancel, data, refetch }: FormInputProps) {
   const { mutate: signAndExecuteTransactionBlock } = useSignAndExecuteTransactionBlock();
   const coinSelected = useStore((state) => state.coinSelected);
   const account = useCurrentAccount();
+  const [api, contextHolder] = notification.useNotification();
   const {
     register,
     control,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -41,18 +45,22 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     },
     mode: 'onBlur',
   });
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: 'Notification!!!',
+      description: 'Send token success',
+    });
+  };
   const { fields, append, remove, update } = useFieldArray({
     name: 'cart',
     control,
   });
-  // console.log(errors, 'errors');
   const onFinish = async (values: FormValues) => {
     // Create a new SuiClient and TransactionBlock
     const client = new SuiClient({
       url: getFullnodeUrl(import.meta.env.VITE_DEFAULT_NETWORK),
     });
     const txb = new TransactionBlock();
-    console.log(values, '213FormValues');
     // Get the coins for the current account
     const coinsRes = await client.getCoins({
       owner: account?.address || '',
@@ -75,7 +83,6 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
       to: item.address,
       amount: convertNumberToSui(item.amount || 0),
     }));
-    console.log(transfers, '123transfers');
     const coins = txb.splitCoins(
       txb.gas,
       transfers.map((transfer) => txb.pure(transfer.amount)),
@@ -87,9 +94,22 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
     });
 
     // Sign and execute the transaction block
-    await signAndExecuteTransactionBlock({
-      transactionBlock: txb,
-    });
+    await signAndExecuteTransactionBlock(
+      {
+        transactionBlock: txb,
+      },
+      {
+        onSuccess: (result) => {
+          // console.log('executed transaction block', result);
+          if (result.digest) {
+            openNotificationWithIcon('success');
+            refetch();
+            reset();
+          }
+          // setDigest(result.digest);
+        },
+      },
+    );
 
     handleCancel();
   };
@@ -107,6 +127,7 @@ export default function FormInput({ handleCancel, data }: FormInputProps) {
   };
   return (
     <div>
+      {contextHolder}
       <form onSubmit={handleSubmit(onFinish)}>
         {fields.map((field, index) => {
           return (

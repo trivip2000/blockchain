@@ -1,5 +1,5 @@
 import create from 'zustand';
-const coinSelected = '';
+const coinSelected = '0x2::sui::SUI';
 export type CoinStore = {
   coinSelected: string;
   setCoinSelected: (coinType: string) => void;

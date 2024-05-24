@@ -1,44 +1,29 @@
-import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 import moment from 'moment';
+
 import { Collapse, Card } from 'antd';
 import { BalanceChangesProps, ObjectCardProps } from './../types';
 import ObjectCard from '@/components/ObjectCard';
 import BalanceCard from '@/components/BalanceCard';
 import { getBlance } from '@/constants';
 import { TransactionBlock } from '../styled';
+interface TransactionData {
+  timestampMs?: string;
+  balanceChanges: BalanceChangesProps[];
+  objectChanges: ObjectCardProps[];
+  transaction: {
+    data: {
+      gasData: {
+        price: string;
+      };
+    };
+  };
+}
 
-function ReceiveTransactions() {
-  const account = useCurrentAccount();
-  const { data, isPending, error } = useSuiClientQuery(
-    'queryTransactionBlocks',
-    {
-      filter: {
-        FromAddress: account?.address as string,
-      },
-      options: {
-        showInput: true,
-        showBalanceChanges: true,
-        showObjectChanges: true,
-        showEffects: true,
-        showEvents: true,
-      },
-    },
-    {
-      enabled: !!account,
-    },
-  );
-  if (!account) {
-    return;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (isPending || !data) {
-    return <div>Loading...</div>;
-  }
-  const items = data.data.map((item) => {
+interface ReceiveTransactionsProps {
+  data: TransactionData[];
+}
+function ReceiveTransactions({ data }: ReceiveTransactionsProps) {
+  const items = data.map((item) => {
     return {
       key: item.timestampMs || '',
       label: (

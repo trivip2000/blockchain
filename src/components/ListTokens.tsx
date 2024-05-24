@@ -1,15 +1,11 @@
 import { useCurrentAccount, useSuiClientQuery } from '@mysten/dapp-kit';
 import { mapCoinName, getBlance } from '@/constants';
-import ModalSendToken from '../pages/Homepage/components/ModalSendToken';
-import { useState } from 'react';
 import createCoinStore from '@/stores/createCounterSlice';
 import SuiIcon from './SuiIcon';
 function ListTokens() {
   const account = useCurrentAccount();
   const setCoinSelected = createCoinStore((state) => state.setCoinSelected);
-  const [open, setOpen] = useState(false);
   const showModal = (coinType: string) => {
-    setOpen(true);
     setCoinSelected(coinType);
   };
   const { data, isPending, error } = useSuiClientQuery(
@@ -51,7 +47,6 @@ function ListTokens() {
           <div>{getBlance(object?.totalBalance || '')}</div>
         </div>
       ))}
-      <ModalSendToken open={open} setOpen={setOpen} data={data} />
     </div>
   );
 }
